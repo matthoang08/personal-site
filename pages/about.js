@@ -1,11 +1,10 @@
-import Header from '../comps/header';
+import Layout from '../components/layout';
 
 const About = () => {
   return (
-    <div>
-      <Header />
+    <Layout>
       <p>About page</p>
-    </div>
+    </Layout>
   );
 }
 
