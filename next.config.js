@@ -8,5 +8,5 @@ module.exports = withTypescript({
     
     return config
   },
-  target: 'serverless'
+  // target: 'serverless'
 });
