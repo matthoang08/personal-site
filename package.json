@@ -2,7 +2,7 @@
   "name": "personal-site",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "bin/server.js",
   "scripts": {
     "dev": "npm run build && node bin/server.js",
     "build": "next build && tsc --project tsconfig.server.json",
