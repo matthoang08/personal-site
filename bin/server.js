@@ -7,17 +7,9 @@ const TABLE_NAME = 'personal-site';
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev });
 const handle = app.getRequestHandler();
-app
-    .prepare()
-    .then(() => {
-    const server = express();
+const setApis = (server) => {
     // init dynamo  client
     const dynamo = new dynamoClient_1.DynamoClient(TABLE_NAME);
-    server.get('/p/:id', (req, res) => {
-        const actualPage = '/post';
-        const queryParams = { id: req.params.id };
-        app.render(req, res, actualPage, queryParams);
-    });
     server.get('/api/id/:id', async (req, res) => {
         const { id } = req.params;
         try {
@@ -27,6 +19,17 @@ app
         catch (err) {
             res.status(500).json({ message: 'error' });
         }
+    });
+};
+app
+    .prepare()
+    .then(() => {
+    const server = express();
+    setApis(server);
+    server.get('/p/:id', (req, res) => {
+        const actualPage = '/post';
+        const queryParams = { id: req.params.id };
+        app.render(req, res, actualPage, queryParams);
     });
     server.get('*', (req, res) => {
         return handle(req, res);
