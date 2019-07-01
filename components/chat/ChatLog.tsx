@@ -1,7 +1,31 @@
 import * as React from 'react';
 
-export class ChatLog extends React.Component {
+interface Props {
+  msgs: string[];
+}
+
+export class ChatLog extends React.Component<Props> {
   render() {
-    return (<div>ChatLog</div>);
+    return (
+      <ul>
+        {this.props.msgs.map((entry) => {
+          return (<ChatEntry key={entry} entry={entry} />);
+        })}
+      </ul>
+    );
+  }
+}
+
+interface ChatEntryProps {
+  entry: string;
+}
+
+class ChatEntry extends React.Component<ChatEntryProps> {
+  render() {
+    return (
+      <li className="chat-entry">
+        {this.props.entry}
+      </li>
+    );
   }
 }

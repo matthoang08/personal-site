@@ -9,7 +9,7 @@ export const Header = () => (
     <Link href="/">
       <a style={linkStyle}>Home</a>
     </Link>
-    <Link href="/game">
+    <Link href="/games">
       <a style={linkStyle}>Game</a>
     </Link>
     <Link href="/about">

@@ -5,7 +5,8 @@
     "rules": {
         "eofline": false,
         "import-name": false,
-        "trailing-comma": false
+        "trailing-comma": false,
+        "variable-name": false
     },
     "rulesDirectory": []
 }

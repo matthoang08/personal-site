@@ -2,9 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
 const next = require("next");
+const http = require("http");
+const socketIo = require("socket.io");
+const chatManager_1 = require("./services/chatManager");
 const dynamoClient_1 = require("./services/dynamoClient");
 const TABLE_NAME = 'personal-site';
 const dev = process.env.NODE_ENV !== 'production';
+const port = process.env.PORT || 3000;
 const app = next({ dev });
 const handle = app.getRequestHandler();
 const setApis = (server) => {
@@ -21,11 +25,7 @@ const setApis = (server) => {
         }
     });
 };
-app
-    .prepare()
-    .then(() => {
-    const server = express();
-    setApis(server);
+const setUpPages = (server) => {
     server.get('/p/:id', (req, res) => {
         const actualPage = '/post';
         const queryParams = { id: req.params.id };
@@ -34,10 +34,18 @@ app
     server.get('*', (req, res) => {
         return handle(req, res);
     });
-    server.listen(3000, (err) => {
-        if (err)
-            throw err;
-        console.log('> Ready on http://localhost:3000');
+};
+app
+    .prepare()
+    .then(() => {
+    const expressServer = express();
+    const httpServer = http.createServer(expressServer);
+    const io = socketIo(httpServer);
+    new chatManager_1.ChatManager(io, expressServer);
+    setApis(expressServer);
+    setUpPages(expressServer);
+    httpServer.listen(port, () => {
+        console.log(`listening on port ${port}`);
     });
 })
     .catch((ex) => {
