@@ -1,12 +1,16 @@
 import React from 'react';
 import List from '@material-ui/core/List';
-import ListItem, { ListItemProps } from '@material-ui/core/ListItem';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
+import DeleteIcon from '@material-ui/icons/Delete';
 
-import { getListOfRooms, addRoom } from '../../services/ChatService';
+import { getListOfRooms, addRoom, deleteRoom } from '../../services/ChatService';
 
 interface Props { }
 interface State {
@@ -30,6 +34,7 @@ export class GameList extends React.Component<Props, State> {
     this.handleModalClose = this.handleModalClose.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleAddNewRoom = this.handleAddNewRoom.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
   async componentDidMount() {
@@ -61,6 +66,16 @@ export class GameList extends React.Component<Props, State> {
     });
   }
 
+  async handleDelete(id: string) {
+    console.log(`handleDelete: ${id}`);
+    try {
+      await deleteRoom(id);
+    } catch (err) {
+      console.log(err);
+    }
+    this.refreshList();
+  }
+
   async handleAddNewRoom() {
     try {
       await addRoom(this.state.modalInput);
@@ -81,7 +96,14 @@ export class GameList extends React.Component<Props, State> {
           <List>
             {this.state.chatList.map((x) => {
               return (
-                <ListItemLink key={x} href={`/game?id=${x}`}>{x}</ListItemLink>
+                <ListItem key={x} button href={`/game?id=${x}`} component="a">
+                  <ListItemText primary={x} />
+                  <ListItemSecondaryAction>
+                    <IconButton edge="end" aria-label="Delete" onClick={() => this.handleDelete(x)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
               );
             })}
           </List>
@@ -103,7 +125,3 @@ export class GameList extends React.Component<Props, State> {
     );
   }
 }
-
-const ListItemLink = (props: ListItemProps<'a', { button?: true }>) => {
-  return <ListItem button component="a" {...props} />;
-};

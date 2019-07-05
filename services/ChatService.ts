@@ -36,3 +36,16 @@ export const getRoom = async (chatroomId: string) => {
     throw err;
   }
 };
+
+export const deleteRoom = async (chatroomId: string) => {
+  try {
+    const resp = await fetch(`/chatrooms/${chatroomId}`, { method: 'DELETE' });
+    if (resp.ok) {
+      console.log('delete successful');
+      return;
+    }
+    throw new Error(`Error deleting room: ${chatroomId}`);
+  } catch (err) {
+    throw err;
+  }
+};
